@@ -1,3 +1,4 @@
+print("hello world")
 # imports
 import time
 from machine import Pin, PWM, UART
@@ -26,8 +27,9 @@ motors = {
     motor1, motor2, motor3, motor4, motor5, motor6  
 }
 
+
 # commands
-def setMotor(motor, v)
+def setMotor(motor, v):
     motor.init(freq=100, duty_ns = ns*(halt+v))
 def move(v1, v2, v3, v4, v5, v6):
     setMotor(motor1, v1 * s)
@@ -36,7 +38,7 @@ def move(v1, v2, v3, v4, v5, v6):
     setMotor(motor4, v4 * s)
     setMotor(motor5, v5 * s)
     setMotor(motor6, v6 * s)
-def brake(): pass
+def brake(): 
     for m in motors:
         setMotor(m, 0)
         #m.init(freq=100, duty_ns = ns*halt)
@@ -49,7 +51,10 @@ while True:
     cmd = input()
     if cmd: 
         if cmd == "z": led.toggle()
-        elif cmd == "test": setMotor(motor1, 1) # only for testing, remove later
+        elif cmd == "tf": setMotor(motor1, 2) #TEST
+        elif cmd == "tb": setMotor(motor1, -2) #TEST
+        elif cmd == "ta": move(1, 1, 1, 1, 1, 1) #TEST
+        elif cmd == "tab": move(-1, -1, -1, -1, -1, -1) #TEST
         elif cmd == "x": brake()
         elif cmd == "w": # FORWARD
             move(1, 0, -1, -1, 0, 1)
@@ -67,3 +72,5 @@ while True:
             move(-1, 0, 1, -1, 0, 1)
         elif cmd == "j": # TURN ANTICLOCKWISE
             move(1, 0, -1, 1, 0, -1)
+            
+brake()
