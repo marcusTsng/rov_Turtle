@@ -1,4 +1,10 @@
-print("hello world")
+"""
+This is MEANT to be the second pico in the ROV, which controls the arm.
+Commands are sent from the first pico which instruct the arm movements.
+
+RN, THIS JUST CONTAINS THE OLD TEST CODE FOR THE ROV
+"""
+
 # imports
 import time
 from machine import Pin, PWM, UART
