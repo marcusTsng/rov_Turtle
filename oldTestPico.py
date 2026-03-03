@@ -1,9 +1,6 @@
-"""
-This is the first pico inside the ROV, which first recieves data from the tether.
-Commands beginning in 0 command the thrusters, commands beginning in 1 are sent to the second pico.
-"""
 
 # imports
+import time
 from machine import Pin, PWM, UART
 
 # stuff
@@ -52,59 +49,31 @@ def brake():
 # runtime logic
 cmd = None
 while True:
-    if uart.any():
-        x = uart.read().decode('utf-8')
-        if x[0] == "0": cmd = x
-        elif x[0] == "1": pass # TRANSMIT TO OTHER PICO
-    
+    #if uart.any():
+        #cmd = uart.read().decode('utf-8')
+    cmd = input()
     if cmd: 
-        if cmd == "00": led.toggle()
+        if cmd == "z": led.toggle()
         elif cmd == "tf": setMotor(motor1, 2) #TEST
         elif cmd == "tb": setMotor(motor1, -2) #TEST
         elif cmd == "ta": move(1, 1, 1, 1, 1, 1) #TEST
         elif cmd == "tab": move(-1, -1, -1, -1, -1, -1) #TEST
-        elif cmd == "01": brake()
-        elif cmd == "02": # FORWARD
+        elif cmd == "x": brake()
+        elif cmd == "w": # FORWARD
             move(1, 0, -1, -1, 0, 1)
-        elif cmd == "03": # BACKWARDS
+        elif cmd == "s": # BACKWARDS
             move(-1, 0, 1, 1, 0, -1)
-        elif cmd == "04": # LEFT
+        elif cmd == "a": # LEFT
             move(-1, 0, -1, 1, 0, 1)
-        elif cmd == "05": # RIGHT
+        elif cmd == "d": # RIGHT
             move(1, 0, 1, -1, 0, -1)
-        elif cmd == "06": # UP
+        elif cmd == "i": # UP
             move(0, 1, 0, 0, 1, 0)
-        elif cmd == "07": # DOWN
+        elif cmd == "k": # DOWN
             move(0, -1, 0, 0, -1, 0)
-        elif cmd == "08": # TURN CLOCKWISE
+        elif cmd == "l": # TURN CLOCKWISE
             move(-1, 0, 1, -1, 0, 1)
-        elif cmd == "09": # TURN ANTICLOCKWISE
+        elif cmd == "j": # TURN ANTICLOCKWISE
             move(1, 0, -1, 1, 0, -1)
             
 brake()
-
-
-
-## OLD CODE
-
-# 
-# from machine import UART
-# uart1 = UART(1, baudrate=9600, tx=4, rx=5)
-#     
-# # USING FILE HANDLING
-# while True:
-# #     with open("/Users/marcustsang/Desktop/ROV/MainRepo/rov_Turtle/test.txt", "r") as f:
-# #         inp = f.read()
-# #         print(inp)
-#     x = input()
-#     if x:
-#         uart1.write(inp)
-#     
-    
-'''
-Final decision
-soooooo uhhhhhhhhhhhhh
-claws: keyboard input, use autoclicker but for enter button (find online hopefully efficient)
-movement: plug in controller ez
-
-'''
