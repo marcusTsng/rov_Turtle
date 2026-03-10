@@ -26,27 +26,37 @@ motor3 = PWM(Pin(9), freq=100, duty_ns=halt*ns)
 motor4 = PWM(Pin(11), freq=100, duty_ns=halt*ns)
 motor5 = PWM(Pin(12), freq=100, duty_ns=halt*ns)
 motor6 = PWM(Pin(14), freq=100, duty_ns=halt*ns)
-motors = {
+motors = (
     motor1, motor2, motor3, motor4, motor5, motor6  
-}
-
+)
+servo1 = PWM(Pin(1), freq=100, duty_ns=halt*ns)
+servo2 = PWM(Pin(2), freq=100, duty_ns=halt*ns)
+servo3 = PWM(Pin(3), freq=100, duty_ns=halt*ns)
+servos = (
+    servo1, servo2, servo3
+)
 
 
 # commands
 def setMotor(motor, v):
-def setMotor(motor, v):
     motor.init(freq=100, duty_ns = ns*(halt+v))
 def move(v1, v2, v3, v4, v5, v6):
-    setMotor(motor1, v1 * s)
-    setMotor(motor2, v2 * s)
-    setMotor(motor3, v3 * s)
-    setMotor(motor4, v4 * s)
-    setMotor(motor5, v5 * s)
-    setMotor(motor6, v6 * s)
-def brake(): 
+    if abs(v1)+abs(v2)+abs(v3)+abs(v4)+abs(v5)+abs(v6) <= 4:
+        setMotor(motor1, v1 * s)
+        setMotor(motor2, v2 * s)
+        setMotor(motor3, v3 * s)
+        setMotor(motor4, v4 * s)
+        setMotor(motor5, v5 * s)
+        setMotor(motor6, v6 * s)
+    
+def setServo(servo, v):
+    servo.init(freq=100, duty_ns = ns*(halt+v * s)) 
+
 def brake(): 
     for m in motors:
         setMotor(m, 0)
+    for s in servos:
+        setServo(m, 0)
         #m.init(freq=100, duty_ns = ns*halt)
         
 # runtime logic
@@ -54,8 +64,6 @@ cmd = None
 while True:
     if uart.any():
         x = uart.read().decode('utf-8')
-        if x[0] == "0": cmd = x
-        elif x[0] == "1": pass # TRANSMIT TO OTHER PICO
     
     if cmd: 
         if cmd == "00": led.toggle()
@@ -63,24 +71,41 @@ while True:
         elif cmd == "tb": setMotor(motor1, -2) #TEST
         elif cmd == "ta": move(1, 1, 1, 1, 1, 1) #TEST
         elif cmd == "tab": move(-1, -1, -1, -1, -1, -1) #TEST
-        elif cmd == "01": brake()
-        elif cmd == "02": # FORWARD
+        elif cmd == "x": brake()
+        elif cmd == "w": # FORWARD
             move(1, 0, -1, -1, 0, 1)
-        elif cmd == "03": # BACKWARDS
+        elif cmd == "s": # BACKWARDS
             move(-1, 0, 1, 1, 0, -1)
-        elif cmd == "04": # LEFT
+        elif cmd == "a": # LEFT
             move(-1, 0, -1, 1, 0, 1)
-        elif cmd == "05": # RIGHT
+        elif cmd == "d": # RIGHT
             move(1, 0, 1, -1, 0, -1)
-        elif cmd == "06": # UP
+        elif cmd == "i": # UP
             move(0, 1, 0, 0, 1, 0)
-        elif cmd == "07": # DOWN
+        elif cmd == "k": # DOWN
             move(0, -1, 0, 0, -1, 0)
-        elif cmd == "08": # TURN CLOCKWISE
+        elif cmd == "l": # TURN CLOCKWISE
             move(-1, 0, 1, -1, 0, 1)
-        elif cmd == "09": # TURN ANTICLOCKWISE
+        elif cmd == "j": # TURN ANTICLOCKWISE
             move(1, 0, -1, 1, 0, -1)
-            
+        elif cmd == "1": # POS
+            setServo(servo1, 1)
+        elif cmd == "2": # NEG
+            setServo(servo1, -1)
+        elif cmd == "3": # POS
+            setServo(servo2, 1)
+        elif cmd == "4": # NEG
+            setServo(servo2, -1)
+        elif cmd == "5": # POS
+            setServo(servo3, 1)
+        elif cmd == "6": # NEG
+            setServo(servo3, -1)
+        elif cmd == "7": # OFF
+            setServo(servo1, 0)
+        elif cmd == "8": # OFF
+            setServo(servo2, 0)
+        elif cmd == "9": # OFF
+            setServo(servo3, 0)
 brake()
 
 

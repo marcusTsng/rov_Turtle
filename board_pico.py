@@ -10,18 +10,20 @@ led = Pin(25, Pin.OUT)
 uart=UART(1, baudrate=9600, tx=4, rx=5)
 uart.init(bits=8, parity=None, stop=1, timeout=1000)
 
+controls = "xwsadijkl"
+
 while True:
     x = input()
-    if x:
-        if x == "x": x = "00"
-        elif x == "w": x = "01"
-        elif x == "s": x = "02"
-        elif x == "a": x = "03"
-        elif x == "d": x = "04"
-        elif x == "i": x = "05"
-        elif x == "j": x = "06"
-        elif x == "k": x = "07"
-        elif x == "l": x = "08"
+    if x in controls:
+#         if x == "x": x = "00"
+#         elif x == "w": x = "01"
+#         elif x == "s": x = "02"
+#         elif x == "a": x = "03"
+#         elif x == "d": x = "04"
+#         elif x == "i": x = "05"
+#         elif x == "j": x = "06"
+#         elif x == "k": x = "07"
+#         elif x == "l": x = "08"
         uart.write(x)
     
 """
